@@ -67,8 +67,8 @@ public class RobotContainer {
 
   // If the B button is held before letting the intake out it is reversed
   Command intakeRun = new ConditionalCommand(
-    intakeRev, 
-    intakeFwd, 
+    intakeRev.withInterrupt(() -> !bButton.get()), 
+    intakeFwd.withInterrupt(() -> bButton.get()), 
     bButton::get
   );
 
@@ -78,46 +78,11 @@ public class RobotContainer {
     flywheelSub
   );
 
-  //TODO: Fix this, too many commands (maybe), just it doesnt work, couldnt test both running
-
   Command deliveryBothOn = new RunCommand( 
     
-    () -> deliverySub.deliveryRun(0.5), 
+    () -> deliverySub.deliveryRun(controller.getRawAxis(Ports.LEFT_TRIGGER)), 
     deliverySub
     
-  );
-
-  Command deliveryBothOff = new RunCommand(
-
-    () -> deliverySub.deliveryRun(0.0), 
-    deliverySub
-
-  );
-
-  Command deliveryStarOn = new RunCommand(
-
-    () -> deliverySub.deliveryStarRun(0.5),
-    deliverySub
-
-  );
-
-  Command deliveryStarOff = new RunCommand(
-
-    () -> deliverySub.deliveryStarRun(0.0), 
-    deliverySub
-    
-  );
-
-  Command deliveryBothRun = new ConditionalCommand(
-    deliveryBothOn, 
-    deliveryBothOff, 
-    xButton::get
-  );
-
-  Command deliveryStarRun = new ConditionalCommand(
-    deliveryStarOn, 
-    deliveryStarOff, 
-    yButton::get
   );
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -125,10 +90,8 @@ public class RobotContainer {
     // Configure the button bindings
     configureButtonBindings();
 
-    intakeSub.setDefaultCommand(new RunCommand( () ->
-      intakeSub.intakeRun(controller.getRawAxis(LeftStick.Y)), intakeSub));
-
     flywheelSub.setDefaultCommand(flywheelRun);
+    deliverySub.setDefaultCommand(deliveryBothOn);
 
   }
 
@@ -140,12 +103,10 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    aButton.whenPressed(intakeOut);
-    aButton.whenHeld(intakeRun);
-    aButton.whenReleased(intakeIn);
-
-    xButton.whenHeld(deliveryBothRun);
-    yButton.whenHeld(deliveryStarRun);
+    // Disabled cause it broke
+    // aButton.whenPressed(intakeOut);
+    // aButton.whenHeld(intakeRun);
+    // aButton.whenReleased(intakeIn);
 
   }
 

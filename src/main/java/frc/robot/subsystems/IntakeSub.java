@@ -22,7 +22,8 @@ public class IntakeSub extends SubsystemBase {
   /** Creates a new Intake. */
   public IntakeSub() {
 
-    intakeIn();
+    // Disabled cause broke
+    // intakeIn();
 
   }
 
