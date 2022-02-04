@@ -20,7 +20,6 @@ public final class Constants {
 
         public static final Value IN = Value.kForward;
         public static final Value OUT = Value.kReverse;
-        public static final Value OFF = Value.kOff;
 
     }
 
@@ -32,6 +31,13 @@ public final class Constants {
         public static final double FLYWHEEL_MAX_SPD = 0.5;
 
         
+    }
+
+    public static final class Drivetrain {
+
+        public static final Value HIGH = Value.kReverse;
+        public static final Value LOW = Value.kForward;
+
     }
 
 }

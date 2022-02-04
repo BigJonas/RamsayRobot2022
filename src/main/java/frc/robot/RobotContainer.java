@@ -7,12 +7,11 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Logitech.Ports;
-import frc.robot.Logitech.Ports.LeftStick;
 import frc.robot.subsystems.DeliverySub;
+import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.IntakeSub;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -28,6 +27,7 @@ public class RobotContainer {
   private static final IntakeSub intakeSub = new IntakeSub();
   private static final FlywheelSub flywheelSub = new FlywheelSub();
   private static final DeliverySub deliverySub = new DeliverySub();
+  private static final DrivetrainSub drivetrainSub = new DrivetrainSub();
 
   // Assuming that port is 0
   private static final Logitech controller = new Logitech(0);
@@ -36,11 +36,26 @@ public class RobotContainer {
   private final JoystickButton xButton = new JoystickButton(controller, Ports.X);
   private final JoystickButton yButton = new JoystickButton(controller, Ports.Y);
 
+  private final JoystickButton leftBumper = new JoystickButton(controller, Ports.LEFT_BUMPER);
+  private final JoystickButton rightBumper = new JoystickButton(controller, Ports.RIGHT_BUMPER);
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
+
+  }
+
+  /**
+   * Use this method to define your button->command mappings. Buttons can be created by
+   * instantiating a {@link GenericHID} or one of its subclasses ({@link
+   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
+   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
+   */
+  private void configureButtonBindings() {
+
+    // Setting default commands
 
     flywheelSub.setDefaultCommand(new RunCommand(
     
@@ -56,18 +71,21 @@ public class RobotContainer {
       
     ));
 
-  }
+    drivetrainSub.setDefaultCommand(new RunCommand(
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be created by
-   * instantiating a {@link GenericHID} or one of its subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
-   * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
-   */
-  private void configureButtonBindings() {
+      () -> drivetrainSub.drive(
 
-    // Disabled cause it broke
-    // Note not broken anymore
+        controller.getRawAxis(Ports.LeftStick.Y), 
+        controller.getRawAxis(Ports.RightStick.X)
+
+        ),
+
+        drivetrainSub
+
+    ));
+
+    // Binding to buttons and bumpers
+
     aButton.whenPressed(new InstantCommand(
      
       () -> {
@@ -107,6 +125,20 @@ public class RobotContainer {
       },
       intakeSub
   
+    ));
+
+    leftBumper.whenPressed(new InstantCommand(
+
+      () -> drivetrainSub.shiftUp(),
+      drivetrainSub
+
+    ));
+
+    rightBumper.whenPressed(new InstantCommand(
+
+      () -> drivetrainSub.shiftDown(),
+      drivetrainSub
+
     ));
 
   }
