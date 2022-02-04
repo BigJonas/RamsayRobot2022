@@ -30,6 +30,7 @@ public class DrivetrainSub extends SubsystemBase {
   public DrivetrainSub() {
 
     right.setInverted(true);
+    shiftDown();
 
   }
 
