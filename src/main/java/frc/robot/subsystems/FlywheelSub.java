@@ -8,7 +8,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import static frc.robot.Constants.Flywheel;
+import static frc.robot.Constants.Flywheel.*;
 
 public class FlywheelSub extends SubsystemBase {
 
@@ -25,7 +25,7 @@ public class FlywheelSub extends SubsystemBase {
 
   public void flywheelSpin(double spd) {
 
-    spd = Math.max(-Flywheel.FLYWHEEL_MAX_SPD, Math.min(Flywheel.FLYWHEEL_MAX_SPD, spd));
+    spd = Math.max(-FLYWHEEL_MAX_SPD, Math.min(FLYWHEEL_MAX_SPD, spd));
     flyWheelMotor1.set(spd);
     flyWheelMotor2.set(spd);
 
@@ -33,7 +33,7 @@ public class FlywheelSub extends SubsystemBase {
 
   public double flywheelGetSpeed() {
 
-    return flyWheelMotor1.getEncoder().getVelocity() * Flywheel.GEAR_RATIO;
+    return flyWheelMotor1.getEncoder().getVelocity() * GEAR_RATIO;
 
   }
 

@@ -9,7 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
+import static frc.robot.Constants.Intake.*;
 
 public class IntakeSub extends SubsystemBase {
 
@@ -30,13 +30,13 @@ public class IntakeSub extends SubsystemBase {
 
   public void intakeIn() {
 
-    intakeSolenoid.set(Constants.Intake.IN);
+    intakeSolenoid.set(IN);
 
   }
 
   public void intakeOut() {
 
-    intakeSolenoid.set(Constants.Intake.OUT);
+    intakeSolenoid.set(OUT);
 
   }
   
