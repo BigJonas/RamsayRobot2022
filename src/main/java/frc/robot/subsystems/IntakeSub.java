@@ -16,9 +16,6 @@ public class IntakeSub extends SubsystemBase {
   private WPI_TalonSRX intakeMotor = new WPI_TalonSRX(3);
   private DoubleSolenoid intakeSolenoid = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 2, 3);
 
-  // True is out and False is in
-  // private boolean solOut = false; 
-
   /** Creates a new Intake. */
   public IntakeSub() {
 
@@ -34,23 +31,18 @@ public class IntakeSub extends SubsystemBase {
   public void intakeIn() {
 
     intakeSolenoid.set(Constants.Intake.IN);
-    // solOut = false;
 
   }
 
   public void intakeOut() {
 
     intakeSolenoid.set(Constants.Intake.OUT);
-    // solOut = true;
 
   }
   
   public void intakeRun(double spd) {
 
-     intakeMotor.set(spd);
-
-
-    // intakeMotor.set(spd);
+    intakeMotor.set(spd);
 
   }
 

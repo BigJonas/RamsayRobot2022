@@ -37,98 +37,24 @@ public class RobotContainer {
   private final JoystickButton yButton = new JoystickButton(controller, Ports.Y);
 
 
-  Command intakeOut = new InstantCommand(
-     
-    () -> intakeSub.intakeOut(),
-    intakeSub
-
-  );
-
-  Command intakeIn = new InstantCommand(
-     
-    () -> intakeSub.intakeIn(),
-    intakeSub
-
-  );
-
-  Command intakeFwd = new RunCommand(
-
-    () -> intakeSub.intakeRun(0.5),
-    intakeSub
-
-  );
-
-  Command intakeRev = new RunCommand(
-
-    () -> intakeSub.intakeRun(-0.5),
-    intakeSub
-
-  );
-
-  // If the B button is held before letting the intake out it is reversed
-  Command intakeRun = new ConditionalCommand(
-    intakeRev, 
-    intakeFwd, 
-    bButton::get
-  );
-
-  Command flywheelRun = new RunCommand(
-    
-    () -> flywheelSub.flywheelSpin(controller.getRawAxis(Ports.RIGHT_TRIGGER)), 
-    flywheelSub
-  );
-
-  //TODO: Fix this, too many commands (maybe), just it doesnt work, couldnt test both running
-
-  Command deliveryBothOn = new RunCommand( 
-    
-    () -> deliverySub.deliveryRun(0.5), 
-    deliverySub
-    
-  );
-
-  Command deliveryBothOff = new RunCommand(
-
-    () -> deliverySub.deliveryRun(0.0), 
-    deliverySub
-
-  );
-
-  Command deliveryStarOn = new RunCommand(
-
-    () -> deliverySub.deliveryStarRun(0.5),
-    deliverySub
-
-  );
-
-  Command deliveryStarOff = new RunCommand(
-
-    () -> deliverySub.deliveryStarRun(0.0), 
-    deliverySub
-    
-  );
-
-  Command deliveryBothRun = new ConditionalCommand(
-    deliveryBothOn, 
-    deliveryBothOff, 
-    xButton::get
-  );
-
-  Command deliveryStarRun = new ConditionalCommand(
-    deliveryStarOn, 
-    deliveryStarOff, 
-    yButton::get
-  );
-
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
     configureButtonBindings();
 
-    intakeSub.setDefaultCommand(new RunCommand( () ->
-      intakeSub.intakeRun(controller.getRawAxis(LeftStick.Y)), intakeSub));
+    flywheelSub.setDefaultCommand(new RunCommand(
+    
+      () -> flywheelSub.flywheelSpin(controller.getRawAxis(Ports.RIGHT_TRIGGER)), 
+      flywheelSub
+      
+    ));
 
-    flywheelSub.setDefaultCommand(flywheelRun);
+    deliverySub.setDefaultCommand(new RunCommand( 
+    
+      () -> deliverySub.deliveryRun(controller.getRawAxis(Ports.LEFT_TRIGGER)), 
+      deliverySub
+      
+    ));
 
   }
 
@@ -140,12 +66,48 @@ public class RobotContainer {
    */
   private void configureButtonBindings() {
 
-    aButton.whenPressed(intakeOut);
-    aButton.whenHeld(intakeRun);
-    aButton.whenReleased(intakeIn);
+    // Disabled cause it broke
+    // Note not broken anymore
+    aButton.whenPressed(new InstantCommand(
+     
+      () -> {
 
-    xButton.whenHeld(deliveryBothRun);
-    yButton.whenHeld(deliveryStarRun);
+        intakeSub.intakeOut();
+
+      },
+      
+      intakeSub
+  
+    ));
+
+    aButton.whileHeld(new RunCommand(
+
+      () -> {
+        
+        if (bButton.get()) {
+
+          intakeSub.intakeRun(-0.5);
+
+        } else {
+
+          intakeSub.intakeRun(0.5);
+
+        }
+      },
+
+      intakeSub
+
+    ));
+
+    aButton.whenReleased(new InstantCommand(
+     
+      () -> {
+        intakeSub.intakeIn();
+        intakeSub.intakeRun(0);
+      },
+      intakeSub
+  
+    ));
 
   }
 
