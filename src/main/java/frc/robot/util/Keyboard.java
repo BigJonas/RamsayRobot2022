@@ -13,32 +13,35 @@ public class Keyboard
 
     // Kind of irritating to change so I hope I dont have to do that
     public class Keys {
-        public static final int A_ = 0;
-        public static final int B_ = 1;
-        public static final int C_ = 2;
-        public static final int D_ = 3;
-        public static final int E_ = 4;
-        public static final int F_ = 5;
-        public static final int G_ = 6;
-        public static final int H_ = 7;
-        public static final int I_ = 8;
-        public static final int J_ = 9;
-        public static final int K_ = 10;
-        public static final int L_ = 11;
-        public static final int M_ = 12;
-        public static final int N_ = 13;
-        public static final int O_ = 14;
-        public static final int P_ = 15;
-        public static final int Q_ = 16;
-        public static final int R_ = 17;
-        public static final int S_ = 18;
-        public static final int T_ = 19;
-        public static final int U_ = 20;
-        public static final int V_ = 21;
-        public static final int W_ = 22;
-        public static final int X_ = 23;
-        public static final int Y_ = 24;
-        public static final int Z_ = 25;
+        public static final int SC_ = 0;
+        public static final int EQ_ = 1;
+
+        public static final int A_ = 2;
+        public static final int B_ = 3;
+        public static final int C_ = 4;
+        public static final int D_ = 5;
+        public static final int E_ = 6;
+        public static final int F_ = 7;
+        public static final int G_ = 8;
+        public static final int H_ = 9;
+        public static final int I_ = 10;
+        public static final int J_ = 11;
+        public static final int K_ = 12;
+        public static final int L_ = 13;
+        public static final int M_ = 14;
+        public static final int N_ = 15;
+        public static final int O_ = 16;
+        public static final int P_ = 17;
+        public static final int Q_ = 18;
+        public static final int R_ = 19;
+        public static final int S_ = 20;
+        public static final int T_ = 21;
+        public static final int U_ = 22;
+        public static final int V_ = 23;
+        public static final int W_ = 24;
+        public static final int X_ = 25;
+        public static final int Y_ = 26;
+        public static final int Z_ = 27;
 
     }
 
@@ -50,12 +53,12 @@ public class Keyboard
 
     public Keyboard() {
 
-        firstKeyOffset = KeyEvent.VK_A;
+        firstKeyOffset = KeyEvent.VK_SEMICOLON;
 
-        keys = new Key[26];
+        keys = new Key[28];
 
         // Initilizing the keys from A-Z
-        for (int i = 0; i < 27; i++) {
+        for (int i = 0; i < keys.length; i++) {
             keys[i] = new Key(this, i);
         }
 

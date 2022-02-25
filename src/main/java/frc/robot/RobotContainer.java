@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import static frc.robot.util.Logitech.Ports;
 import frc.robot.subsystems.DeliverySub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FlywheelSub;
@@ -19,7 +18,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
+import static frc.robot.util.Logitech.Ports.*;
 import static frc.robot.util.Keyboard.Keys.*;
+
+import static frc.robot.Constants.Flywheel.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -36,20 +38,20 @@ public class RobotContainer {
 
   // Assuming that port is 0
   private final Logitech controller = new Logitech(0);
-  private final JoystickButton aButton = new JoystickButton(controller, Ports.A);
-  private final JoystickButton bButton = new JoystickButton(controller, Ports.B);
-  private final JoystickButton xButton = new JoystickButton(controller, Ports.X);
-  private final JoystickButton yButton = new JoystickButton(controller, Ports.Y);
+  private final JoystickButton aButton = new JoystickButton(controller, A);
+  private final JoystickButton bButton = new JoystickButton(controller, B);
+  private final JoystickButton xButton = new JoystickButton(controller, X);
+  private final JoystickButton yButton = new JoystickButton(controller, Y);
 
-  private final JoystickButton leftBumper = new JoystickButton(controller, Ports.LEFT_BUMPER);
-  private final JoystickButton rightBumper = new JoystickButton(controller, Ports.RIGHT_BUMPER);
+  private final JoystickButton leftBumper = new JoystickButton(controller, LEFT_BUMPER);
+  private final JoystickButton rightBumper = new JoystickButton(controller, RIGHT_BUMPER);
 
   private final Keyboard board = new Keyboard(); 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the button bindings
-    configureButtonBindings();
+    configureKeyboardBindings();
 
   }
 
@@ -59,41 +61,15 @@ public class RobotContainer {
    * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then passing it to a {@link
    * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
    */
-  private void configureButtonBindings() {
-
-    // Setting default commands
-
-    flywheelSub.setDefaultCommand(new RunCommand(
-    
-      () -> flywheelSub.flywheelSpin(controller.getRawAxis(Ports.RIGHT_TRIGGER)), 
-      flywheelSub
-      
-    ));
-
-    deliverySub.setDefaultCommand(new RunCommand( 
-    
-      () -> {
-
-        // Auto run delivery when flywheel is at shooting speed
-        if (flywheelSub.flywheelGetSpeed() >= Constants.Flywheel.FLYWHEEL_SHOOT_RPM) {
-
-          deliverySub.deliveryRun(0.5);
-
-        } 
-
-        deliverySub.deliveryRun(controller.getRawAxis(Ports.LEFT_TRIGGER));
-
-      }, 
-      deliverySub
-      
-    ));
+  private void configureJoystickBindings() {
+    // Default commands
 
     drivetrainSub.setDefaultCommand(new RunCommand(
 
       () -> drivetrainSub.drive(
 
-        controller.getRawAxis(Ports.LeftStick.Y), 
-        controller.getRawAxis(Ports.RightStick.X)
+        controller.getRawAxis(LeftStick.Y), 
+        controller.getRawAxis(RightStick.X)
 
         ),
 
@@ -101,7 +77,31 @@ public class RobotContainer {
 
     ));
 
-    // Binding to buttons and bumpers
+    flywheelSub.setDefaultCommand(new RunCommand(
+    
+      () -> flywheelSub.flywheelSpin(controller.getRawAxis(RIGHT_TRIGGER)), 
+      flywheelSub
+      
+    ));
+
+    deliverySub.setDefaultCommand(
+      new RunCommand(() -> {
+
+        // Auto run delivery when flywheel is at shooting speed
+        if (flywheelSub.flywheelGetSpeed() >= FLYWHEEL_SHOOT_RPM) {
+
+          deliverySub.deliveryRun(0.5);
+
+        } 
+
+        deliverySub.deliveryRun(controller.getRawAxis(LEFT_TRIGGER));
+
+      }, 
+      deliverySub
+      
+    ));
+
+    // Button bindings
 
     aButton.whenPressed(new InstantCommand(
      
@@ -146,19 +146,118 @@ public class RobotContainer {
 
     leftBumper.whenPressed(new InstantCommand(
 
-      () -> drivetrainSub.shiftUp(),
-      drivetrainSub
+      () -> drivetrainSub.shiftUp()
 
     ));
 
     rightBumper.whenPressed(new InstantCommand(
 
-      () -> drivetrainSub.shiftDown(),
+      () -> drivetrainSub.shiftDown()
+
+    ));
+  }
+  
+  private void configureKeyboardBindings() {
+    
+    // Default commands
+    drivetrainSub.setDefaultCommand(
+      new RunCommand(() -> {
+        drivetrainSub.drive(
+          // Assuming that foward is positive and rotating left is positive
+          board.keys[W_].get() ?  1.0 : 
+          board.keys[S_].get() ? -1.0 : 0, 
+          board.keys[A_].get() ?  1.0 :
+          board.keys[D_].get() ? -1.0 : 0
+        );
+      },
+
       drivetrainSub
 
     ));
 
-    
+    flywheelSub.setDefaultCommand(
+      new RunCommand(() -> {
+        flywheelSub.flywheelSpin(
+          board.keys[J_].get() ? FLYWHEEL_MAX_SPD : 0
+        );
+      }, 
+      
+      flywheelSub
+
+    ));
+
+    deliverySub.setDefaultCommand(
+      new RunCommand(() -> {
+        // Auto run delivery when flywheel is at shooting speed
+        if (flywheelSub.flywheelGetSpeed() >= FLYWHEEL_SHOOT_RPM) {
+
+          deliverySub.deliveryRun(0.5);
+
+        } 
+
+        deliverySub.deliveryRun(
+          board.keys[K_].get() ? 0.5 : 0
+        );
+      }, 
+      
+      deliverySub
+
+    ));
+
+
+
+    // Key bindings
+
+    board.keys[L_].whenPressed(
+      new InstantCommand(() -> {
+        intakeSub.intakeOut();
+
+      },
+
+      intakeSub
+
+    ))
+    .whenHeld(
+      new RunCommand(() -> {
+        if (board.keys[SC_].get()) {
+
+          intakeSub.intakeRun(-0.5);
+
+        } else {
+
+          intakeSub.intakeRun(0.5);
+
+        }
+
+      },
+
+      intakeSub
+
+    ))
+    .whenReleased(
+      new InstantCommand(() -> {
+        intakeSub.intakeIn();
+        intakeSub.intakeRun(0.0);
+      },
+      
+        intakeSub
+      
+    ));
+
+    board.keys[Q_].whenPressed(
+      new InstantCommand(() -> {
+        drivetrainSub.shiftUp();
+
+      }
+
+    ));
+    board.keys[E_].whenPressed(
+      new InstantCommand(() -> {
+        drivetrainSub.shiftDown();
+
+      }
+
+    ));
 
   }
 
