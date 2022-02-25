@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import static frc.robot.Constants.Flywheel.*;
 
@@ -33,6 +34,7 @@ public class FlywheelSub extends SubsystemBase {
 
   public double flywheelGetSpeed() {
 
+    SmartDashboard.putNumber("Flywheel speed", flyWheelMotor1.getEncoder().getVelocity() * GEAR_RATIO);
     return flyWheelMotor1.getEncoder().getVelocity() * GEAR_RATIO;
 
   }

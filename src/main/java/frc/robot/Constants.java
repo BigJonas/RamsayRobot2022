@@ -29,7 +29,7 @@ public final class Constants {
         public static final double FLYWHEEL_SPD = -1;
         public static final double GEAR_RATIO = 3.0; // 3 Flywheel rotations per motor rotation
         public static final double FLYWHEEL_MAX_SPD = 0.5;
-
+        public static final double FLYWHEEL_SHOOT_RPM = 5000; 
         
     }
 

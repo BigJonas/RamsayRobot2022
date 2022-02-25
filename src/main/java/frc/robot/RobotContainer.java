@@ -6,15 +6,20 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.Logitech.Ports;
+import static frc.robot.util.Logitech.Ports;
 import frc.robot.subsystems.DeliverySub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.IntakeSub;
+import frc.robot.util.Key;
+import frc.robot.util.Keyboard;
+import frc.robot.util.Logitech;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
+import static frc.robot.util.Keyboard.Keys.*;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -30,7 +35,7 @@ public class RobotContainer {
   private static final DrivetrainSub drivetrainSub = new DrivetrainSub();
 
   // Assuming that port is 0
-  private static final Logitech controller = new Logitech(0);
+  private final Logitech controller = new Logitech(0);
   private final JoystickButton aButton = new JoystickButton(controller, Ports.A);
   private final JoystickButton bButton = new JoystickButton(controller, Ports.B);
   private final JoystickButton xButton = new JoystickButton(controller, Ports.X);
@@ -39,6 +44,7 @@ public class RobotContainer {
   private final JoystickButton leftBumper = new JoystickButton(controller, Ports.LEFT_BUMPER);
   private final JoystickButton rightBumper = new JoystickButton(controller, Ports.RIGHT_BUMPER);
 
+  private final Keyboard board = new Keyboard(); 
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -66,7 +72,18 @@ public class RobotContainer {
 
     deliverySub.setDefaultCommand(new RunCommand( 
     
-      () -> deliverySub.deliveryRun(controller.getRawAxis(Ports.LEFT_TRIGGER)), 
+      () -> {
+
+        // Auto run delivery when flywheel is at shooting speed
+        if (flywheelSub.flywheelGetSpeed() >= Constants.Flywheel.FLYWHEEL_SHOOT_RPM) {
+
+          deliverySub.deliveryRun(0.5);
+
+        } 
+
+        deliverySub.deliveryRun(controller.getRawAxis(Ports.LEFT_TRIGGER));
+
+      }, 
       deliverySub
       
     ));
@@ -140,6 +157,8 @@ public class RobotContainer {
       drivetrainSub
 
     ));
+
+    
 
   }
 
