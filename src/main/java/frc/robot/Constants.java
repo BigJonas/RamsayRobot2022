@@ -6,6 +6,8 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
+import static frc.robot.util.Keyboard.Keys.*;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -37,6 +39,12 @@ public final class Constants {
 
         public static final Value HIGH = Value.kReverse;
         public static final Value LOW = Value.kForward;
+
+    }
+
+    public static final class Keyboard {
+
+        public static final int KEY_AMOUNT = Z_;
 
     }
 

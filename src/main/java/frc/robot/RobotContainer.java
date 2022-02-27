@@ -10,7 +10,6 @@ import frc.robot.subsystems.DeliverySub;
 import frc.robot.subsystems.DrivetrainSub;
 import frc.robot.subsystems.FlywheelSub;
 import frc.robot.subsystems.IntakeSub;
-import frc.robot.util.Key;
 import frc.robot.util.Keyboard;
 import frc.robot.util.Logitech;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -163,11 +162,10 @@ public class RobotContainer {
     drivetrainSub.setDefaultCommand(
       new RunCommand(() -> {
         drivetrainSub.drive(
-          // Assuming that foward is positive and rotating left is positive
           board.keys[W_].get() ?  1.0 : 
           board.keys[S_].get() ? -1.0 : 0, 
-          board.keys[A_].get() ?  1.0 :
-          board.keys[D_].get() ? -1.0 : 0
+          board.keys[A_].get() ? -1.0 :
+          board.keys[D_].get() ?  1.0 : 0
         );
       },
 
@@ -203,8 +201,6 @@ public class RobotContainer {
       deliverySub
 
     ));
-
-
 
     // Key bindings
 
